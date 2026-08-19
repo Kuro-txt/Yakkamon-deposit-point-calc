@@ -138,6 +138,7 @@
     <div class="form-group">
       <label for="tierSelect">Select Tier</label>
       <select id="tierSelect" onchange="calculatePoints()">
+        <option value="0.00">Below Tier: < 50 FLOWER (0%)</option>
         <option value="0.10">Tier 1: 50 – 499 FLOWER (10%)</option>
         <option value="0.20">Tier 2: 500 – 4,999 FLOWER (20%)</option>
         <option value="0.40">Tier 3: 5,000 – 49,999 FLOWER (40%)</option>
@@ -194,8 +195,10 @@
         tierSelect.value = "0.40";
       } else if (amount >= 500) {
         tierSelect.value = "0.20";
-      } else {
+      } else if (amount >= 50) {
         tierSelect.value = "0.10";
+      } else {
+        tierSelect.value = "0.00";
       }
     }
 
