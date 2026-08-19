@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modern Calculator</title>
+  <title>FLOWER Points Calculator</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,192 +13,164 @@
     }
 
     body {
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      background: #0f172a;
+      background: #0b0f19;
+      color: #f1f5f9;
+      padding: 20px;
     }
 
-    .calculator {
-      background: #1e293b;
-      padding: 24px;
+    .card {
+      background: #161f30;
+      border: 1px solid #283548;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      padding: 28px;
       width: 100%;
-      max-width: 320px;
+      max-width: 440px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .display {
-      background: #0f172a;
-      color: #f8fafc;
-      font-size: 2rem;
-      text-align: right;
-      padding: 16px;
-      border-radius: 8px;
+    h2 {
+      font-size: 1.4rem;
       margin-bottom: 20px;
-      overflow-x: auto;
-      white-space: nowrap;
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
+      text-align: center;
+      color: #38bdf8;
     }
 
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+    .form-group {
+      margin-bottom: 16px;
     }
 
-    button {
-      padding: 16px;
-      font-size: 1.25rem;
+    label {
+      display: block;
+      font-size: 0.85rem;
       font-weight: 600;
-      border: none;
+      margin-bottom: 6px;
+      color: #94a3b8;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #0b0f19;
+      border: 1px solid #334155;
       border-radius: 8px;
-      cursor: pointer;
-      background: #334155;
       color: #f8fafc;
-      transition: background 0.15s ease, transform 0.05s ease;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
 
-    button:hover {
-      background: #475569;
+    select:focus, input:focus {
+      border-color: #38bdf8;
     }
 
-    button:active {
-      transform: scale(0.96);
+    .result-box {
+      margin-top: 24px;
+      padding: 18px;
+      background: #0f172a;
+      border-radius: 10px;
+      border: 1px solid #1e293b;
     }
 
-    button.operator {
-      background: #3b82f6;
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #94a3b8;
     }
 
-    button.operator:hover {
-      background: #2563eb;
+    .result-total {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
     }
 
-    button.action {
-      background: #ef4444;
+    .result-total span:first-child {
+      font-weight: bold;
+      color: #f8fafc;
     }
 
-    button.action:hover {
-      background: #dc2626;
-    }
-
-    button.equals {
-      grid-column: span 2;
-      background: #10b981;
-    }
-
-    button.equals:hover {
-      background: #059669;
+    .result-total .points {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4ade80;
     }
   </style>
 </head>
 <body>
 
-  <div class="calculator">
-    <div id="display" class="display">0</div>
-    <div class="buttons">
-      <button class="action" onclick="clearDisplay()">AC</button>
-      <button class="action" onclick="deleteLast()">DEL</button>
-      <button class="operator" onclick="appendValue('/')">÷</button>
-      <button class="operator" onclick="appendValue('*')">×</button>
+  <div class="card">
+    <h2>FLOWER Rewards Calculator</h2>
 
-      <button onclick="appendValue('7')">7</button>
-      <button onclick="appendValue('8')">8</button>
-      <button onclick="appendValue('9')">9</button>
-      <button class="operator" onclick="appendValue('-')">−</button>
+    <!-- Dropdown Menu -->
+    <div class="form-group">
+      <label for="tierSelect">Select Tier</label>
+      <select id="tierSelect" onchange="calculatePoints()">
+        <option value="0.10" data-min="50" data-max="499">Tier 1: 50 – 499 FLOWER (10%)</option>
+        <option value="0.20" data-min="500" data-max="4999">Tier 2: 500 – 4,999 FLOWER (20%)</option>
+        <option value="0.40" data-min="5000" data-max="49999">Tier 3: 5,000 – 49,999 FLOWER (40%)</option>
+        <option value="0.80" data-min="50000" data-max="Infinity">Tier 4: 50,000+ FLOWER (80%)</option>
+      </select>
+    </div>
 
-      <button onclick="appendValue('4')">4</button>
-      <button onclick="appendValue('5')">5</button>
-      <button onclick="appendValue('6')">6</button>
-      <button class="operator" onclick="appendValue('+')">+</button>
+    <!-- Amount Input -->
+    <div class="form-group">
+      <label for="amount">Amount Deposited (FLOWER)</label>
+      <input type="number" id="amount" value="100" min="0" step="any" oninput="calculatePoints()" />
+    </div>
 
-      <button onclick="appendValue('1')">1</button>
-      <button onclick="appendValue('2')">2</button>
-      <button onclick="appendValue('3')">3</button>
-      <button onclick="appendValue('.')">.</button>
+    <!-- Multiplier Input -->
+    <div class="form-group">
+      <label for="multiplier">Weekly Multiplier</label>
+      <input type="number" id="multiplier" value="2.8" min="1" step="0.1" oninput="calculatePoints()" />
+    </div>
 
-      <button onclick="appendValue('0')">0</button>
-      <button class="equals" onclick="calculate()">=</button>
+    <!-- Results Display -->
+    <div class="result-box">
+      <div class="result-row">
+        <span>Tier Bonus Rate</span>
+        <span id="rateLabel">10%</span>
+      </div>
+      <div class="result-row">
+        <span>Effective Multiplier</span>
+        <span id="effectiveMultiplier">1.28x</span>
+      </div>
+      <div class="result-total">
+        <span>Points Gained</span>
+        <span class="points" id="totalPoints">290.00</span>
+      </div>
     </div>
   </div>
 
   <script>
-    const display = document.getElementById('display');
-    let currentInput = '0';
-    let shouldResetDisplay = false;
+    function calculatePoints() {
+      const tierSelect = document.getElementById('tierSelect');
+      const rate = parseFloat(tierSelect.value);
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
 
-    function updateDisplay() {
-      display.innerText = currentInput;
+      // Formula: Deposit * (1 + (Rate * Multiplier))
+      const effectiveMult = 1 + (rate * multiplier);
+      const pointsGained = amount * effectiveMult;
+
+      // Update UI
+      document.getElementById('rateLabel').textContent = `${(rate * 100).toFixed(0)}%`;
+      document.getElementById('effectiveMultiplier').textContent = `${effectiveMult.toFixed(2)}x`;
+      document.getElementById('totalPoints').textContent = pointsGained.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
     }
 
-    function appendValue(val) {
-      if (currentInput === '0' && !isNaN(val)) {
-        currentInput = val;
-      } else if (shouldResetDisplay && !isNaN(val)) {
-        currentInput = val;
-        shouldResetDisplay = false;
-      } else {
-        // Prevent consecutive operators
-        const lastChar = currentInput.slice(-1);
-        if (['+', '-', '*', '/'].includes(lastChar) && ['+', '-', '*', '/'].includes(val)) {
-          currentInput = currentInput.slice(0, -1) + val;
-        } else {
-          currentInput += val;
-        }
-      }
-      updateDisplay();
-    }
-
-    function clearDisplay() {
-      currentInput = '0';
-      shouldResetDisplay = false;
-      updateDisplay();
-    }
-
-    function deleteLast() {
-      if (currentInput.length === 1 || currentInput === 'Error') {
-        currentInput = '0';
-      } else {
-        currentInput = currentInput.slice(0, -1);
-      }
-      updateDisplay();
-    }
-
-    function calculate() {
-      try {
-        // Safe evaluation without raw eval
-        const sanitizedExpression = currentInput.replace(/[^0-9+\-*/.]/g, '');
-        const result = Function(`'use strict'; return (${sanitizedExpression})`)();
-        
-        if (!isFinite(result) || isNaN(result)) {
-          currentInput = 'Error';
-        } else {
-          currentInput = parseFloat(result.toFixed(8)).toString();
-        }
-        shouldResetDisplay = true;
-      } catch (err) {
-        currentInput = 'Error';
-      }
-      updateDisplay();
-    }
-
-    // Keyboard support
-    window.addEventListener('keydown', (e) => {
-      if (!isNaN(e.key) || ['+', '-', '*', '/', '.'].includes(e.key)) {
-        appendValue(e.key);
-      } else if (e.key === 'Enter' || e.key === '=') {
-        calculate();
-      } else if (e.key === 'Backspace') {
-        deleteLast();
-      } else if (e.key === 'Escape') {
-        clearDisplay();
-      }
-    });
+    // Run on first load
+    calculatePoints();
   </script>
 </body>
 </html>
