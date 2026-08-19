@@ -109,14 +109,31 @@
   <div class="card">
     <h2>FLOWER Rewards Calculator</h2>
 
-    <!-- Dropdown Menu -->
+    <!-- Tier Dropdown -->
     <div class="form-group">
       <label for="tierSelect">Select Tier</label>
       <select id="tierSelect" onchange="calculatePoints()">
-        <option value="0.10" data-min="50" data-max="499">Tier 1: 50 – 499 FLOWER (10%)</option>
-        <option value="0.20" data-min="500" data-max="4999">Tier 2: 500 – 4,999 FLOWER (20%)</option>
-        <option value="0.40" data-min="5000" data-max="49999">Tier 3: 5,000 – 49,999 FLOWER (40%)</option>
-        <option value="0.80" data-min="50000" data-max="Infinity">Tier 4: 50,000+ FLOWER (80%)</option>
+        <option value="0.10">Tier 1: 50 – 499 FLOWER (10%)</option>
+        <option value="0.20">Tier 2: 500 – 4,999 FLOWER (20%)</option>
+        <option value="0.40">Tier 3: 5,000 – 49,999 FLOWER (40%)</option>
+        <option value="0.80">Tier 4: 50,000+ FLOWER (80%)</option>
+      </select>
+    </div>
+
+    <!-- Weekly Multiplier Dropdown -->
+    <div class="form-group">
+      <label for="multiplierSelect">Weekly Multiplier</label>
+      <select id="multiplierSelect" onchange="calculatePoints()">
+        <option value="2.8">2.8x</option>
+        <option value="2.6">2.6x</option>
+        <option value="2.4">2.4x</option>
+        <option value="2.2">2.2x</option>
+        <option value="2.0">2.0x</option>
+        <option value="1.8">1.8x</option>
+        <option value="1.6">1.6x</option>
+        <option value="1.4">1.4x</option>
+        <option value="1.2">1.2x</option>
+        <option value="1.0">1.0x</option>
       </select>
     </div>
 
@@ -126,21 +143,15 @@
       <input type="number" id="amount" value="100" min="0" step="any" oninput="calculatePoints()" />
     </div>
 
-    <!-- Multiplier Input -->
-    <div class="form-group">
-      <label for="multiplier">Weekly Multiplier</label>
-      <input type="number" id="multiplier" value="2.8" min="1" step="0.1" oninput="calculatePoints()" />
-    </div>
-
     <!-- Results Display -->
     <div class="result-box">
       <div class="result-row">
-        <span>Tier Bonus Rate</span>
+        <span>Tier Bonus</span>
         <span id="rateLabel">10%</span>
       </div>
       <div class="result-row">
-        <span>Effective Multiplier</span>
-        <span id="effectiveMultiplier">1.28x</span>
+        <span>Selected Multiplier</span>
+        <span id="multLabel">2.8x</span>
       </div>
       <div class="result-total">
         <span>Points Gained</span>
@@ -151,25 +162,23 @@
 
   <script>
     function calculatePoints() {
-      const tierSelect = document.getElementById('tierSelect');
-      const rate = parseFloat(tierSelect.value);
+      const tierRate = parseFloat(document.getElementById('tierSelect').value);
+      const weeklyMultiplier = parseFloat(document.getElementById('multiplierSelect').value);
       const amount = parseFloat(document.getElementById('amount').value) || 0;
-      const multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
 
-      // Formula: Deposit * (1 + (Rate * Multiplier))
-      const effectiveMult = 1 + (rate * multiplier);
-      const pointsGained = amount * effectiveMult;
+      // Formula: Amount * (Weekly Multiplier + Tier Bonus Rate)
+      const pointsGained = amount * (weeklyMultiplier + tierRate);
 
-      // Update UI
-      document.getElementById('rateLabel').textContent = `${(rate * 100).toFixed(0)}%`;
-      document.getElementById('effectiveMultiplier').textContent = `${effectiveMult.toFixed(2)}x`;
+      // Update UI labels and results
+      document.getElementById('rateLabel').textContent = `${(tierRate * 100).toFixed(0)}%`;
+      document.getElementById('multLabel').textContent = `${weeklyMultiplier.toFixed(1)}x`;
       document.getElementById('totalPoints').textContent = pointsGained.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       });
     }
 
-    // Run on first load
+    // Run on page load
     calculatePoints();
   </script>
 </body>
