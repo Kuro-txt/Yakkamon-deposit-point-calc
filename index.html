@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yakkamon Points Calculator</title>
+  <title>Yakkamon Pokédex Calculator</title>
+  <!-- Pixel font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+  
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
     }
 
     body {
@@ -17,171 +21,310 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #0b0f19;
-      color: #f1f5f9;
-      padding: 20px;
+      font-family: 'Chakra Petch', sans-serif;
+      padding: 24px 16px;
+      /* Subtle dark Pokémon battle background with radial grid */
+      background: 
+        radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.12) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 24px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 24px),
+        #111827;
+      color: #1f2937;
     }
 
-    .card {
-      background: #161f30;
-      border: 1px solid #283548;
-      border-radius: 16px;
-      padding: 28px;
+    /* Outer Pokédex Chassis */
+    .pokedex-card {
+      background: #dc2626;
+      border: 4px solid #7f1d1d;
+      border-radius: 24px 24px 28px 28px;
+      padding: 24px 20px 20px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      max-width: 450px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.6),
+        inset 0 4px 8px rgba(255, 255, 255, 0.35),
+        inset 0 -6px 12px rgba(0, 0, 0, 0.4);
+      position: relative;
     }
 
-    h2 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      text-align: center;
-      color: #38bdf8;
+    /* Top Pokédex Sensor Lights */
+    .pokedex-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #991b1b;
+    }
+
+    .main-lens {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #93c5fd, #2563eb 60%, #1e3a8a 100%);
+      border: 3px solid #f8fafc;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .mini-lights {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mini-light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid #1f2937;
+    }
+
+    .light-red { background: radial-gradient(circle at 30% 30%, #fca5a5, #ef4444); }
+    .light-yellow { background: radial-gradient(circle at 30% 30%, #fef08a, #eab308); }
+    .light-green { background: radial-gradient(circle at 30% 30%, #86efac, #22c55e); }
+
+    .header-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      color: #fef08a;
+      text-shadow: 2px 2px 0px #7f1d1d;
+      margin-left: auto;
+      letter-spacing: 0.5px;
+    }
+
+    /* Inner Gray Screen / Bezel Frame */
+    .screen-bezel {
+      background: #e5e7eb;
+      border: 3px solid #374151;
+      border-radius: 12px 12px 20px 12px;
+      padding: 18px;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    .screen-top-dots {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .screen-top-dots span {
+      width: 8px;
+      height: 8px;
+      background: #dc2626;
+      border-radius: 50%;
+      border: 1px solid #7f1d1d;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.58rem;
+      line-height: 1.4;
       margin-bottom: 6px;
-      color: #94a3b8;
+      color: #374151;
     }
 
     select, input {
       width: 100%;
-      padding: 12px 14px;
-      background: #0b0f19;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      color: #f8fafc;
+      padding: 10px 12px;
+      background: #ffffff;
+      border: 2px solid #4b5563;
+      border-radius: 6px;
+      color: #111827;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.15s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
     select:focus, input:focus {
-      border-color: #38bdf8;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.35);
     }
 
-    .result-box {
-      margin-top: 24px;
-      padding: 18px;
-      background: #0f172a;
-      border-radius: 10px;
-      border: 1px solid #1e293b;
+    /* Digital LCD Green Result Display */
+    .lcd-display {
+      margin-top: 16px;
+      background: #8b956d;
+      border: 3px solid #4b5320;
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #1a230e;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+      font-family: 'Press Start 2P', monospace;
     }
 
     .result-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
-      font-size: 0.9rem;
-      color: #94a3b8;
+      font-size: 0.55rem;
+      letter-spacing: -0.2px;
+    }
+
+    .result-row span:first-child {
+      color: #2e3b18;
     }
 
     .result-total {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #334155;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px dashed #4b5320;
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .result-total span:first-child {
-      font-weight: bold;
-      color: #f8fafc;
+    .result-total .label {
+      font-size: 0.6rem;
+      color: #202b11;
     }
 
     .result-total .points {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #4ade80;
+      font-size: 1.1rem;
+      text-align: right;
+      color: #0f1607;
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: 0.5px;
     }
 
-    .footer {
-      margin-top: 20px;
+    /* Footer Details */
+    .pokedex-bottom-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding: 0 4px;
+    }
+
+    .screen-speaker {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .screen-speaker span {
+      width: 32px;
+      height: 3px;
+      background: #6b7280;
+      border-radius: 2px;
+    }
+
+    .footer-credit {
+      margin-top: 14px;
       text-align: center;
-      font-size: 0.85rem;
-      color: #64748b;
+      font-size: 0.72rem;
+      color: #fee2e2;
+      font-weight: 500;
     }
 
-    .footer a {
-      color: #38bdf8;
+    .footer-credit a {
+      color: #fef08a;
       text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s;
+      font-weight: 700;
+      border-bottom: 1px dotted #fef08a;
+      transition: color 0.15s;
     }
 
-    .footer a:hover {
-      color: #7dd3fc;
-      text-decoration: underline;
+    .footer-credit a:hover {
+      color: #ffffff;
+      border-bottom-style: solid;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Yakkamon Point Calculator</h2>
-
-    <!-- Amount Input (Defaults to 0) -->
-    <div class="form-group">
-      <label for="amount">Amount Deposited (FLOWER)</label>
-      <input type="number" id="amount" value="0" min="0" step="any" oninput="onAmountChanged()" />
-    </div>
-
-    <!-- Tier Dropdown (Defaults to 0.00) -->
-    <div class="form-group">
-      <label for="tierSelect">Select Tier</label>
-      <select id="tierSelect" onchange="calculatePoints()">
-        <option value="0.00" selected>Below Tier: < 50 FLOWER (0%)</option>
-        <option value="0.10">Tier 1: 50 – 499 FLOWER (10%)</option>
-        <option value="0.20">Tier 2: 500 – 4,999 FLOWER (20%)</option>
-        <option value="0.40">Tier 3: 5,000 – 49,999 FLOWER (40%)</option>
-        <option value="0.80">Tier 4: 50,000+ FLOWER (80%)</option>
-      </select>
-    </div>
-
-    <!-- Weekly Multiplier Dropdown -->
-    <div class="form-group">
-      <label for="multiplierSelect">Weekly Multiplier</label>
-      <select id="multiplierSelect" onchange="calculatePoints()">
-        <option value="2.8">2.8x</option>
-        <option value="2.6">2.6x</option>
-        <option value="2.4">2.4x</option>
-        <option value="2.2">2.2x</option>
-        <option value="2.0">2.0x</option>
-        <option value="1.8">1.8x</option>
-        <option value="1.6">1.6x</option>
-        <option value="1.4">1.4x</option>
-        <option value="1.2">1.2x</option>
-        <option value="1.0">1.0x</option>
-      </select>
-    </div>
-
-    <!-- Results Display -->
-    <div class="result-box">
-      <div class="result-row">
-        <span>Tier Bonus</span>
-        <span id="rateLabel">0%</span>
+  <div class="pokedex-card">
+    <!-- Top Sensor Array -->
+    <div class="pokedex-header">
+      <div class="main-lens"></div>
+      <div class="mini-lights">
+        <div class="mini-light light-red"></div>
+        <div class="mini-light light-yellow"></div>
+        <div class="mini-light light-green"></div>
       </div>
-      <div class="result-row">
-        <span>Selected Multiplier</span>
-        <span id="multLabel">2.8x</span>
+      <div class="header-title">POKÉ-CALC v1.0</div>
+    </div>
+
+    <!-- Main Screen Display -->
+    <div class="screen-bezel">
+      <div class="screen-top-dots">
+        <span></span>
+        <span></span>
       </div>
-      <div class="result-total">
-        <span>Points Gained</span>
-        <span class="points" id="totalPoints">0.00</span>
+
+      <!-- Deposit Input -->
+      <div class="form-group">
+        <label for="amount">DEPOSIT (FLOWER)</label>
+        <input type="number" id="amount" value="0" min="0" step="any" oninput="onAmountChanged()" placeholder="0" />
+      </div>
+
+      <!-- Tier Selection -->
+      <div class="form-group">
+        <label for="tierSelect">LEVEL TIER</label>
+        <select id="tierSelect" onchange="calculatePoints()">
+          <option value="0.00" selected>NO TIER: &lt; 50 (0%)</option>
+          <option value="0.10">TIER 1: 50–499 (10%)</option>
+          <option value="0.20">TIER 2: 500–4,999 (20%)</option>
+          <option value="0.40">TIER 3: 5,000–49,999 (40%)</option>
+          <option value="0.80">TIER 4: 50,000+ (80%)</option>
+        </select>
+      </div>
+
+      <!-- Multiplier Dropdown -->
+      <div class="form-group">
+        <label for="multiplierSelect">WEEKLY MULTIPLIER</label>
+        <select id="multiplierSelect" onchange="calculatePoints()">
+          <option value="2.8">2.8x MULTIPLIER</option>
+          <option value="2.6">2.6x MULTIPLIER</option>
+          <option value="2.4">2.4x MULTIPLIER</option>
+          <option value="2.2">2.2x MULTIPLIER</option>
+          <option value="2.0">2.0x MULTIPLIER</option>
+          <option value="1.8">1.8x MULTIPLIER</option>
+          <option value="1.6">1.6x MULTIPLIER</option>
+          <option value="1.4">1.4x MULTIPLIER</option>
+          <option value="1.2">1.2x MULTIPLIER</option>
+          <option value="1.0">1.0x MULTIPLIER</option>
+        </select>
+      </div>
+
+      <!-- LCD Readout Screen -->
+      <div class="lcd-display">
+        <div class="result-row">
+          <span>TIER BONUS:</span>
+          <span id="rateLabel">0%</span>
+        </div>
+        <div class="result-row">
+          <span>MULTIPLIER:</span>
+          <span id="multLabel">2.8x</span>
+        </div>
+        <div class="result-total">
+          <span class="label">EXP GAINED:</span>
+          <span class="points" id="totalPoints">0.00</span>
+        </div>
+      </div>
+
+      <!-- Speaker Grille details -->
+      <div class="pokedex-bottom-details">
+        <div class="screen-speaker">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div style="font-family: 'Press Start 2P'; font-size: 0.5rem; color: #6b7280;">YAKKAMON OS</div>
       </div>
     </div>
 
     <!-- Footer Credit -->
-    <div class="footer">
-      Inspired by <a href="https://www.youtube.com/@xeko" target="_blank" rel="noopener noreferrer">Xeko</a>'s Yakkamon Deposit Calculator Sheet
+    <div class="footer-credit">
+      Inspired by <a href="https://www.youtube.com/@xeko" target="_blank" rel="noopener noreferrer">Xeko</a>'s Yakkamon Deposit Calculator
     </div>
   </div>
 
@@ -225,7 +368,7 @@
       });
     }
 
-    // Run on initial page load (evaluates with amount = 0)
+    // Run on initial load
     onAmountChanged();
   </script>
 </body>
